@@ -18,12 +18,12 @@ const LoginForm = ({ onLogin }) => {
         username,
         password,
       });
-      if (response.data === "User Exists") {
-        setMessage(''); // Clear any previous error messages
-        onLogin(username); // Notify parent component of successful login
-        navigate('/home'); // Navigate to the home page
+      console.log(response.data)
+      if (response.data == "ok") {
+        onLogin(username);
+        navigate('/home');
       } else {
-        setMessage(response.data);
+        setMessage('User does not exist');
       }
     } catch (error) {
       console.error('There was an error checking the user!', error);

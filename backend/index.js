@@ -1,15 +1,14 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-require('dotenv').config(); // Load environment variables
 
 // Initialize the app
 const app = express();
-const port = process.env.PORT || 5000;
+const port = 5000;
 
 // Middleware
 app.use(cors({
-  origin: "http://localhost:5173", // Updated to match your React development server URL
+  origin: "http://localhost:5173", // Update to match your React development server URL
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true // Allow cookies to be sent with requests
@@ -18,9 +17,12 @@ app.use(cors({
 app.use(express.json());
 
 // MongoDB connection
-const dbURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/mydatabase';
+const dbURI = 'mongodb+srv://saran2701:Saran%402004@cluster0.8ghbjvv.mongodb.net/mydatabase?retryWrites=true&w=majority&appName=Cluster0';
 
-mongoose.connect(dbURI)
+mongoose.connect(dbURI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+})
   .then(() => console.log('Connected to MongoDB'))
   .catch(err => console.error('Error connecting to MongoDB:', err));
 
@@ -35,12 +37,12 @@ const User = mongoose.model('User', userSchema);
 // Routes
 app.post('/checkUser', async (req, res) => {
   try {
-    const user = await User.findOne({ username: req.body.username });
-    if (user && req.body.password === user.password) {
-      res.send("User Exists");
-    } else {
-      res.send("User does not exist");
+    const user = await User.findOne({username:req.body.username});
+    if(user.password === req.body.password){
+      res.send("ok");
     }
+    else res.send("nil");
+
   } catch (err) {
     res.status(500).send('Error: ' + err);
   }
