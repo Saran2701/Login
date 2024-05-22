@@ -1,33 +1,42 @@
-import React, { useState } from 'react';
-import { Container, TextField, Button, Box } from '@mui/material';
-import axios from 'axios';
-import { BrowserRouter as Router, Route, Routes, useNavigate, Navigate } from 'react-router-dom';
-import Home from './Home';
-import './App.css';
+import React, { useState } from "react";
+import { Container, TextField, Button, Box } from "@mui/material";
+import axios from "axios";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  useNavigate,
+  Navigate,
+} from "react-router-dom";
+import Home from "./Home";
+import "./App.css";
 
 const LoginForm = ({ onLogin }) => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [message, setMessage] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [message, setMessage] = useState("");
   const navigate = useNavigate();
 
   const handleCheckUser = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5000/checkUser', {
-        username,
-        password,
-      });
-      console.log(response.data)
+      const response = await axios.post(
+        "https://login-backend-d1bl.onrender.com/checkUser",
+        {
+          username,
+          password,
+        } 
+      );
+      console.log(response.data);
       if (response.data == "ok") {
         onLogin(username);
-        navigate('/home');
+        navigate("/home");
       } else {
-        setMessage('User does not exist');
+        setMessage("User does not exist");
       }
     } catch (error) {
-      console.error('There was an error checking the user!', error);
-      setMessage('Error checking user');
+      console.error("There was an error checking the user!", error);
+      setMessage("Error checking user");
     }
   };
 
@@ -36,10 +45,10 @@ const LoginForm = ({ onLogin }) => {
       component="form"
       onSubmit={handleCheckUser}
       sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        width: '100%',
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        width: "100%",
       }}
     >
       <TextField
@@ -82,7 +91,7 @@ const LoginForm = ({ onLogin }) => {
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [username, setUsername] = useState('');
+  const [username, setUsername] = useState("");
 
   const handleLogin = (username) => {
     setUsername(username);
@@ -92,21 +101,29 @@ const App = () => {
   return (
     <Router>
       <Routes>
-        <Route path="/home" element={isLoggedIn ? <Home username={username} /> : <Navigate to="/" />} />
-        <Route path="/" element={
-          <Container
-            maxWidth="sm"
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'center',
-              alignItems: 'center',
-              height: '100vh',
-            }}
-          >
-            <LoginForm onLogin={handleLogin} />
-          </Container>
-        } />
+        <Route
+          path="/home"
+          element={
+            isLoggedIn ? <Home username={username} /> : <Navigate to="/" />
+          }
+        />
+        <Route
+          path="/"
+          element={
+            <Container
+              maxWidth="sm"
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "100vh",
+              }}
+            >
+              <LoginForm onLogin={handleLogin} />
+            </Container>
+          }
+        />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </Router>
