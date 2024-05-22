@@ -6,14 +6,23 @@ const cors = require('cors');
 const app = express();
 const port = 5000;
 
-// Middleware
-app.use(cors({
-  origin: "http://localhost:5173", // Update to match your React development server URL
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-  credentials: true // Allow cookies to be sent with requests
-}));
+// CORS configuration
+const allowedOrigins = [
+  'http://localhost:5173',
+  'https://664d7166a705738c808fbb38--symphonious-parfait-949bd8.netlify.app'
+];
 
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  }
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // MongoDB connection
@@ -37,12 +46,12 @@ const User = mongoose.model('User', userSchema);
 // Routes
 app.post('/checkUser', async (req, res) => {
   try {
-    const user = await User.findOne({username:req.body.username});
-    if(user.password === req.body.password){
+    const user = await User.findOne({ username: req.body.username });
+    if (user.password === req.body.password) {
       res.send("ok");
+    } else {
+      res.send("nil");
     }
-    else res.send("nil");
-
   } catch (err) {
     res.status(500).send('Error: ' + err);
   }
