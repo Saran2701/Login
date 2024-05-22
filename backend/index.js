@@ -9,7 +9,7 @@ const port = 5000;
 // CORS configuration
 const allowedOrigins = [
   'http://localhost:5173',
-  'https://664d7166a705738c808fbb38--symphonious-parfait-949bd8.netlify.app'
+  'https://login-using-react.netlify.app'    
 ];
 
 const corsOptions = {
